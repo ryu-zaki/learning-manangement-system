@@ -1,0 +1,15 @@
+{
+    "name": "johnwell/server",
+    "autoload": {
+        "psr-4": {
+            "Johnwell\\Server\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "ryu-zaki",
+            "email": "jhonwellryuzaki0987@gmail.com"
+        }
+    ],
+    "require": {}
+}

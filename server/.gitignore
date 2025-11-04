@@ -1,0 +1,43 @@
+# === PHP dependencies ===
+/vendor/
+
+# === Environment files ===
+.env
+
+# === IDE / Editor settings ===
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# === OS-generated files ===
+.DS_Store
+Thumbs.db
+
+# === Logs and cache ===
+/logs/
+/cache/
+/tmp/
+/storage/
+/sessions/
+*.log
+
+# === Composer lock file (optional) ===
+# Uncomment if you don’t want to track exact dependency versions
+# composer.lock
+
+# === PHPUnit & testing ===
+/coverage/
+.phpunit.result.cache
+
+# === Backup or temporary files ===
+*.bak
+*.old
+*.swp
+*.tmp
+*.zip
+
+# === Uploads or generated files ===
+/uploads/
+/public/uploads/
+/public/storage/
