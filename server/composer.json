@@ -1,14 +1,18 @@
 {
-    "name": "johnwell/server",
+    "name": "classify/server",
     "autoload": {
         "psr-4": {
-            "Johnwell\\Server\\": "src/"
+            "Classify\\Server\\": "src/"
         }
     },
     "authors": [
         {
             "name": "ryu-zaki",
             "email": "jhonwellryuzaki0987@gmail.com"
+        },
+        {
+            "name": "kzc0des",
+            "email": "kz.codesofficial@gmail.com"
         }
     ],
     "require": {}
