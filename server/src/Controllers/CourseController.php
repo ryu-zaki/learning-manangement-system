@@ -1,19 +1,26 @@
 <?php
+
 namespace Classify\Server\Controllers;
 
 use Classify\Server\Config\Database;
 use Classify\Server\Helpers\Response;
 use PDO;
 
-class CourseController {
+class CourseController
+{
     private PDO $pdo;
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->pdo = Database::getConnection();
     }
-    
-    // ... getAllCourses() is unchanged ...
-    public function getAllCourses(): void {
+
+    /**
+     * Gets all courses.
+     * GET /api/courses
+     */
+    public function getAllCourses(): void
+    {
         $stmt = $this->pdo->query("
             SELECT c.*, CONCAT(u.first_name, ' ', u.last_name) as instructor_name 
             FROM courses c
@@ -23,12 +30,12 @@ class CourseController {
         Response::json($courses);
     }
 
-
     /**
-     * Gets a single course and its content (lessons, quizzes).
-     * REMOVED 'projects' logic.
+     * Gets a single course and all its content (lessons, quizzes, projects).
+     * GET /api/courses/{id}
      */
-    public function getCourseContent(int $id): void {
+    public function getCourseContent(int $id): void
+    {
         // 1. Get Course Details
         $stmt = $this->pdo->prepare("SELECT * FROM courses WHERE id = ?");
         $stmt->execute([$id]);
@@ -48,16 +55,20 @@ class CourseController {
         $stmt = $this->pdo->prepare("SELECT id, course_id, lesson_id, title FROM quizzes WHERE course_id = ?");
         $stmt->execute([$id]);
         $course['quizzes'] = $stmt->fetchAll();
-        
+
         // 4. Set projects to empty array
         // This stops the client from breaking when it tries to map course.projects
         $course['projects'] = [];
 
         Response::json($course);
     }
-    
-    // ... enroll() is unchanged ...
-    public function enroll(int $id, int $userId): void {
+
+    /**
+     * Enrolls the current user in a course.
+     * POST /api/courses/{id}/enroll
+     */
+    public function enroll(int $id, int $userId): void
+    {
         try {
             $stmt = $this->pdo->prepare("INSERT INTO enrollments (user_id, course_id) VALUES (?, ?)");
             $stmt->execute([$userId, $id]);

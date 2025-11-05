@@ -1,4 +1,5 @@
 <?php
+
 namespace Classify\Server\Controllers;
 
 use Classify\Server\Config\Database;
@@ -6,10 +7,12 @@ use Classify\Server\Helpers\Response;
 use Classify\Server\Helpers\AuthHelper;
 use PDO;
 
-class AuthController {
+class AuthController
+{
     private PDO $pdo;
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->pdo = Database::getConnection();
     }
 
@@ -17,7 +20,8 @@ class AuthController {
      * Handles user registration.
      * POST /api/auth/register
      */
-    public function register(): void {
+    public function register(): void
+    {
         $data = json_decode(file_get_contents('php://input'), true);
 
         if (empty($data['first_name']) || empty($data['last_name']) || empty($data['email']) || empty($data['password'])) {
@@ -39,7 +43,7 @@ class AuthController {
         // Insert new user
         $stmt = $this->pdo->prepare("INSERT INTO users (first_name, last_name, email, password_hash, role) VALUES (?, ?, ?, ?, 'student')");
         $stmt->execute([$data['first_name'], $data['last_name'], $data['email'], $passwordHash]);
-        
+
         $userId = (int)$this->pdo->lastInsertId();
         $token = AuthHelper::createToken($userId);
 
@@ -59,7 +63,8 @@ class AuthController {
      * Handles user login.
      * POST /api/auth/login
      */
-    public function login(): void {
+    public function login(): void
+    {
         $data = json_decode(file_get_contents('php://input'), true);
 
         if (empty($data['email']) || empty($data['password'])) {
@@ -79,7 +84,7 @@ class AuthController {
         }
 
         $token = AuthHelper::createToken($user['id']);
-        
+
         // Don't send password hash to client
         unset($user['password_hash']);
 
@@ -90,15 +95,16 @@ class AuthController {
     }
 
     /**
-     * Gets the current user and their progress.
-     * REMOVED 'projectsCompleted' to match your request.
+     * Gets the currently authenticated user's data.
+     * GET /api/auth/me
      */
-    public function getMe(): void {
-        $user = AuthHelper::getUserFromToken(); 
+    public function getMe(): void
+    {
+        $user = AuthHelper::getUserFromToken();
         if (!$user) {
-             Response::error('Unauthorized', 401);
+            Response::error('Unauthorized', 401);
         }
-        
+
         // 1. Get completed lessons
         $stmt_lessons = $this->pdo->prepare("
             SELECT l.course_id, up.content_id as lesson_id
@@ -131,7 +137,7 @@ class AuthController {
             $progressMap[$courseId]['completedLessons'][] = $lesson['lesson_id'];
         }
 
-         foreach ($quizzes as $quiz) {
+        foreach ($quizzes as $quiz) {
             $courseId = $quiz['course_id'];
             if (!isset($progressMap[$courseId])) {
                 $progressMap[$courseId] = ['completedLessons' => [], 'quizScores' => []];
@@ -139,9 +145,9 @@ class AuthController {
             // Use lesson_id as the key, per client/src/contexts/AuthContext.tsx
             $progressMap[$courseId]['quizScores'][$quiz['lesson_id']] = (float)$quiz['score'];
         }
-        
+
         $user['progress'] = $progressMap;
-        
+
         Response::json($user);
     }
 }
