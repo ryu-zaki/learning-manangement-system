@@ -1,22 +1,26 @@
 <?php
+
 namespace Classify\Server\Controllers;
 
 use Classify\Server\Config\Database;
 use Classify\Server\Helpers\Response;
 use PDO;
 
-class ProgressController {
+class ProgressController
+{
     private PDO $pdo;
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->pdo = Database::getConnection();
     }
 
     /**
      * Gets statistics for the dashboard.
-     * REMOVED project logic.
+     * GET /api/progress/dashboard
      */
-    public function getDashboardStats(int $userId): void {
+    public function getDashboardStats(int $userId): void
+    {
         // 1. Total Lessons in enrolled courses
         $stmt = $this->pdo->prepare("
             SELECT COUNT(l.id) 
@@ -65,10 +69,11 @@ class ProgressController {
 
     /**
      * Gets detailed progress for the achievements page.
-     * REMOVED project logic.
+     * GET /api/progress/courses
      */
-    public function getCourseProgress(int $userId): void {
-        
+    public function getCourseProgress(int $userId): void
+    {
+
         $stmt = $this->pdo->prepare("
             SELECT 
                 c.id, 
@@ -97,15 +102,15 @@ class ProgressController {
             JOIN enrollments e ON c.id = e.course_id
             WHERE e.user_id = ?
         ");
-        
+
         $stmt->execute([$userId]);
         $courseStats = $stmt->fetchAll();
 
         // Add 'totalProjects' and 'projectsCompleted' as 0 to prevent client errors
         foreach ($courseStats as $key => $stat) {
-             $courseStats[$key]['totalProjects'] = 0;
-             $courseStats[$key]['projectsCompleted'] = 0;
-             $courseStats[$key]['averageQuizScore'] = $stat['averageQuizScore'] ? (float)$stat['averageQuizScore'] : 0;
+            $courseStats[$key]['totalProjects'] = 0;
+            $courseStats[$key]['projectsCompleted'] = 0;
+            $courseStats[$key]['averageQuizScore'] = $stat['averageQuizScore'] ? (float)$stat['averageQuizScore'] : 0;
         }
 
         Response::json($courseStats);
