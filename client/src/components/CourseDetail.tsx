@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { courses, Course } from '../data/courses';
+import { courses } from '../data/courses';
 import { useAuth } from '../contexts/AuthContext';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/card';
 import { Button } from './ui/button';

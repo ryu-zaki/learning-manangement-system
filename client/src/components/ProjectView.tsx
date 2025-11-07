@@ -5,7 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/
 import { Button } from './ui/button';
 import { Checkbox } from './ui/checkbox';
 import { ArrowLeft, Clock, CheckCircle2, Code2 } from 'lucide-react';
-import { Alert, AlertDescription, AlertTitle } from './ui/alert-dialog';
+import { Alert, AlertTitle, AlertDescription } from './ui/alert';
 
 interface ProjectViewProps {
   courseId: string;
