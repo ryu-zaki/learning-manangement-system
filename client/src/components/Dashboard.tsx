@@ -43,7 +43,7 @@ export const Dashboard = ({ onNavigate }: DashboardProps) => {
   };
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-8 w-full">
       <div>
         <h1>Welcome back, {user?.name}! 👋</h1>
         <p className="text-muted-foreground mt-1">
