@@ -7,8 +7,8 @@ interface SidebarProps {
   currentPage: string;
   onNavigate: (page: string) => void;
 }
-
-export const Sidebar = ({ currentPage, onNavigate }: SidebarProps) => {
+ 
+const Sidebar = ({ currentPage, onNavigate }: SidebarProps) => {
   const { user, logout } = useAuth();
   const { isDark, toggleTheme } = useTheme();
 
@@ -82,3 +82,5 @@ export const Sidebar = ({ currentPage, onNavigate }: SidebarProps) => {
     </div>
   );
 };
+
+export { Sidebar };
