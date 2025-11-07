@@ -5,7 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/
 import { Button } from './ui/button';
 import { Progress } from './ui/progress';
 import { ArrowLeft, ArrowRight, CheckCircle2, BookOpen } from 'lucide-react';
-import { Alert, AlertDescription, AlertTitle } from './ui/alert-dialog';
+import { Alert, AlertTitle, AlertDescription } from './ui/alert';
 
 interface LessonViewProps {
   courseId: string;
