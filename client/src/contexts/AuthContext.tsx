@@ -50,14 +50,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const fetchUser = async (token: string) => {
     try {
-      const response = await fetch(`${API_URL}/auth/me`, {
+      const response = await fetch(`${API_URL}/auth/me.php`, {
         credentials: 'include', // Important for sending auth headers cross-origin
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json',
         },
       });
-
+console.log(response.ok)
       if (response.ok) {
         const userData = await response.json();
         // Combine first and last name and ensure progress has projectsCompleted
@@ -97,9 +97,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       });
       
       if (response.ok) {
-        /* const { token } = await response.json();
+        const { token } = await response.json();
+        
         localStorage.setItem('lms_token', token);
-        return await fetchUser(token); */
+        return await fetchUser(token);
       }
       return false;
     } catch (error) {
