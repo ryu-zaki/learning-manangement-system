@@ -42,7 +42,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   useEffect(() => {
     const loadUserFromToken = async () => {
-      const token = localStorage.getItem('lms_token');
+      const token = sessionStorage.getItem('lms_token');
       if (token) {
         await fetchUser(token);
       }
@@ -106,7 +106,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       console.log(response);
       if (response.ok) {
         const { token } = await response.json();
-        localStorage.setItem('lms_token', token);
+        sessionStorage.setItem('lms_token', token);
         return await fetchUser(token);
       }
       return false;
@@ -126,7 +126,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       }); 
       if (response.ok || response.status === 201) {
         const { token } = await response.json();
-        localStorage.setItem('lms_token', token);
+        sessionStorage.setItem('lms_token', token);
         return await fetchUser(token);
       }
       return true;
@@ -140,11 +140,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const logout = () => {
     setUser(null);
-    localStorage.removeItem('lms_token');
+    sessionStorage.removeItem('lms_token');
   };
 
   const deleteAccount = async (): Promise<boolean> => {
-    const token = localStorage.getItem('lms_token');
+    const token = sessionStorage.getItem('lms_token');
     if (!token) return false;
 
     try {
@@ -191,7 +191,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const updateProgressOnBackend = async (progress: User['progress']) => {
-    const token = localStorage.getItem('lms_token');
+    const token = sessionStorage.getItem('lms_token');
     if (!token) return;
 
     console.log(JSON.stringify({ progress }));

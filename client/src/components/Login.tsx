@@ -98,6 +98,9 @@ export const Login = () => {
                 onClick={() => {
                   setIsLogin(!isLogin);
                   setError('');
+                  setName('');
+                  setEmail('');
+                  setPassword('');
                 }}
                 className="text-sm text-muted-foreground hover:text-foreground transition-colors"
               >
