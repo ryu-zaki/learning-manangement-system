@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { useTheme } from '../contexts/ThemeContext';
 import { Button } from './ui/button';
-import { Code2, Home, BookOpen, Trophy, User, LogOut, Moon, Sun } from 'lucide-react';
+import { Code2, BookOpen, Trophy, User, LogOut, Moon, Sun } from 'lucide-react';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -38,7 +38,7 @@ const Sidebar = ({ currentPage, onNavigate }: SidebarProps) => {
             <Code2 className="w-6 h-6 text-primary-foreground" />
           </div>
           <div>
-            <h1 className="tracking-tight">DevLearn</h1>
+            <h1 className="tracking-tight">Classify</h1>
             <p className="text-xs text-muted-foreground">Learning Platform</p>
           </div>
         </div>

@@ -123,9 +123,9 @@ export const Quiz = ({ courseId, lessonId, onNavigate }: QuizProps) => {
                 {quiz.questions.map((q, index) => (
                   <div key={q.id} className="flex items-start gap-3">
                     {answers[index] === q.correctAnswer ? (
-                      <CheckCircle2 className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" />
+                      <CheckCircle2 className="w-5 h-5 text-primary mt-0.5 shrink-0" />
                     ) : (
-                      <XCircle className="w-5 h-5 text-destructive mt-0.5 flex-shrink-0" />
+                      <XCircle className="w-5 h-5 text-destructive mt-0.5 shrink-0" />
                     )}
                     <div className="flex-1">
                       <p className="text-sm">{q.question}</p>

@@ -94,7 +94,7 @@ export const Achievements = ({ onNavigate }: AchievementsProps) => {
                 <CardHeader>
                   <div className="flex items-start justify-between">
                     <div className="flex items-start gap-4">
-                      <div className={`w-12 h-12 rounded-lg bg-gradient-to-br ${course.color} flex items-center justify-center`}>
+                      <div className={`w-12 h-12 rounded-lg bg-linear-to-br ${course.color} flex items-center justify-center`}>
                         <Icon className="w-6 h-6 text-white" />
                       </div>
                       <div>
