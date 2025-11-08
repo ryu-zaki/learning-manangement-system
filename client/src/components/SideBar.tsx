@@ -25,7 +25,6 @@ const Sidebar = ({ currentPage, onNavigate }: SidebarProps) => {
   const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
 
   const navItems = [
-    { id: 'dashboard', label: 'Dashboard', icon: Home },
     { id: 'courses', label: 'Courses', icon: BookOpen },
     { id: 'achievements', label: 'Progress', icon: Trophy },
     { id: 'profile', label: 'Profile', icon: User },

@@ -20,7 +20,7 @@ interface AppState {
 
 const MainApp = () => {
   const { user } = useAuth();
-  const [appState, setAppState] = useState<AppState>({ page: 'dashboard' });
+  const [appState, setAppState] = useState<AppState>({ page: 'courses' });
 
   const handleNavigate = (page: string, courseId?: string, lessonId?: number, projectId?: number) => {
     setAppState({ page, courseId, lessonId, projectId });
@@ -32,7 +32,6 @@ const MainApp = () => {
 
   const renderContent = () => {
     switch (appState.page) {
-      case 'dashboard':
       case 'courses':
         return <Dashboard onNavigate={handleNavigate} />;
       case 'course':
