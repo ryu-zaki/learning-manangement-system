@@ -35,7 +35,7 @@ export const useAuth = () => {
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
-  const API_URL = 'http://localhost/server2';
+  const API_URL = 'http://localhost/classify';
 
   useEffect(() => {
     const loadUserFromToken = async () => {
@@ -50,7 +50,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const fetchUser = async (token: string) => {
     try {
-      const response = await fetch(`${API_URL}/auth/me`, {
+      const response = await fetch(`${API_URL}/auth/me.php`, {
         credentials: 'include', // Important for sending auth headers cross-origin
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -91,15 +91,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     try {
       const response = await fetch(`${API_URL}/auth/login.php`, {
         method: 'POST',
-       /*  mode: 'no-cors', */
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password }),
       });
-      
+      console.log(response);
       if (response.ok) {
-        /* const { token } = await response.json();
+        const { token } = await response.json();
         localStorage.setItem('lms_token', token);
-        return await fetchUser(token); */
+        return await fetchUser(token); 
       }
       return false;
     } catch (error) {
@@ -116,14 +115,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name, email, password }),
       });
-
-      /* if (response.ok || response.status === 201) {
+      // console.log(response);
+      if (response.ok || response.status === 201) {
         const { token } = await response.json();
         localStorage.setItem('lms_token', token);
         return await fetchUser(token);
-      } */
-
-        if (response.status === 403) return false;
+      } 
        return true;
 
       
