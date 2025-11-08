@@ -1,7 +1,18 @@
+import { useState } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { useTheme } from '../contexts/ThemeContext';
 import { Button } from './ui/button';
 import { Code2, Home, BookOpen, Trophy, User, LogOut, Moon, Sun } from 'lucide-react';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from './ui/alert-dialog';
 
 interface SidebarProps {
   currentPage: string;
@@ -11,6 +22,7 @@ interface SidebarProps {
 const Sidebar = ({ currentPage, onNavigate }: SidebarProps) => {
   const { user, logout } = useAuth();
   const { isDark, toggleTheme } = useTheme();
+  const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
 
   const navItems = [
     { id: 'dashboard', label: 'Dashboard', icon: Home },
@@ -71,7 +83,7 @@ const Sidebar = ({ currentPage, onNavigate }: SidebarProps) => {
           </Button>
           <Button
             variant="outline"
-            onClick={logout}
+            onClick={() => setIsLogoutModalOpen(true)}
             className="flex-1"
           >
             <LogOut className="w-4 h-4 mr-2" />
@@ -79,6 +91,21 @@ const Sidebar = ({ currentPage, onNavigate }: SidebarProps) => {
           </Button>
         </div>
       </div>
+
+      <AlertDialog open={isLogoutModalOpen} onOpenChange={setIsLogoutModalOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Are you sure you want to log out?</AlertDialogTitle>
+            <AlertDialogDescription>
+              You will be returned to the login screen.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={logout}>Log Out</AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 };
