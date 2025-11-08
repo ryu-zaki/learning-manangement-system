@@ -20,6 +20,7 @@ interface AuthContextType {
   signup: (name: string, email: string, password: string) => Promise<boolean>;
   logout: () => void;
   updateProgress: (courseId: string, lessonId: number, quizScore?: number) => void;
+  deleteAccount: () => Promise<boolean>;
   completeProject: (courseId: string, projectId: number) => void;
 }
 
@@ -142,6 +143,27 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     localStorage.removeItem('lms_token');
   };
 
+  const deleteAccount = async (): Promise<boolean> => {
+    const token = localStorage.getItem('lms_token');
+    if (!token) return false;
+
+    try {
+      const response = await fetch(`${API_URL}/auth/delete.php`, {
+        method: 'DELETE',
+        headers: { 'Authorization': `Bearer ${token}` },
+      });
+
+      if (response.ok) {
+        logout();
+        return true;
+      }
+      return false;
+    } catch (error) {
+      console.error('Account deletion failed:', error);
+      return false;
+    }
+  };
+
   const updateProgress = (courseId: string, lessonId: number, quizScore?: number) => {
     if (!user) return;
 
@@ -213,7 +235,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }
 
   return (
-    <AuthContext.Provider value={{ user, login, signup, logout, updateProgress, completeProject }}>
+    <AuthContext.Provider value={{ user, login, signup, logout, updateProgress, completeProject, deleteAccount }}>
       {children}
     </AuthContext.Provider>
   );

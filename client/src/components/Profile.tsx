@@ -1,12 +1,25 @@
+import { useState } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { courses } from '../data/courses';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/card';
 import { Avatar, AvatarFallback } from './ui/avatar';
 import { Badge } from './ui/badge';
+import { Button } from './ui/button';
 import { User, Mail, Calendar, Trophy, BookOpen, Target } from 'lucide-react';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from './ui/alert-dialog';
 
 export const Profile = () => {
-  const { user } = useAuth();
+  const { user, deleteAccount } = useAuth();
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
   if (!user) return null;
 
@@ -69,6 +82,14 @@ export const Profile = () => {
 
   const earnedAchievements = achievements.filter((a) => a.earned);
 
+  const handleDeleteAccount = async () => {
+    const success = await deleteAccount();
+    if (!success) {
+      // You can add a toast notification here to inform the user of the failure.
+      console.error("Failed to delete account");
+    }
+  };
+
   return (
     <div className="space-y-8">
       <div>
@@ -115,6 +136,11 @@ export const Profile = () => {
                   })}</p>
                 </div>
               </div>
+            </div>
+            <div className="pt-6 border-t">
+              <Button variant="destructive" className="w-full" onClick={() => setIsDeleteModalOpen(true)}>
+                Delete Account
+              </Button>
             </div>
           </CardContent>
         </Card>
@@ -204,6 +230,22 @@ export const Profile = () => {
           </div>
         </CardContent>
       </Card>
+
+      <AlertDialog open={isDeleteModalOpen} onOpenChange={setIsDeleteModalOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+            <AlertDialogDescription>
+              This action cannot be undone. This will permanently delete your account
+              and remove your data from our servers.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={handleDeleteAccount} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">Delete</AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 };
