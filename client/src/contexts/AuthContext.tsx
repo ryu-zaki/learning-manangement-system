@@ -46,7 +46,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         await fetchUser(token);
       }
       setLoading(false);
-    };
+    }; 
     loadUserFromToken();
   }, []);
 
@@ -85,7 +85,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         console.log("User Info: " + formattedUser);
         return true;
       } else {
-        // Token is invalid or expired
         logout();
         return false;
       }
@@ -123,8 +122,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name, email, password }),
-      });
-      // console.log(response);
+      }); 
       if (response.ok || response.status === 201) {
         const { token } = await response.json();
         localStorage.setItem('lms_token', token);
@@ -174,8 +172,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const token = localStorage.getItem('lms_token');
     if (!token) return;
 
-    // has contents - [ html: { completedLessons: [1], projectCompleted : [], quizScores: {} } ]
-
     console.log(JSON.stringify({ progress }));
     try {
       await fetch(`${API_URL}/auth/update.php`, {
@@ -184,13 +180,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`,
         },
-        body: JSON.stringify({ progress }), // generates = " { "newProgress": [] } "
+        body: JSON.stringify({ progress }),
       });
-      // You might want to add response handling here
     } catch (error) {
       console.error('Failed to update progress on backend:', error);
-      // Optionally, handle the error, e.g., by showing a notification
-      // or reverting the local state change.
     }
   };
 
@@ -216,7 +209,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   if (loading) {
-    return <div>Loading...</div>; // Or a spinner component
+    return <div>Loading...</div>;
   }
 
   return (

@@ -31,7 +31,6 @@ export const Login = () => {
 
 
       const success = await signup(name, email, password);
-      console.log(success);
       if (!success) {
         setError('Email already exists');
       }

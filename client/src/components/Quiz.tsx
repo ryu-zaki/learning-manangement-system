@@ -41,7 +41,6 @@ export const Quiz = ({ courseId, lessonId, onNavigate }: QuizProps) => {
       setCurrentQuestion(currentQuestion + 1);
       setSelectedAnswer(null);
     } else {
-      // Calculate score
       const correctCount = newAnswers.reduce((acc, answer, index) => {
         return acc + (answer === quiz.questions[index].correctAnswer ? 1 : 0);
       }, 0);

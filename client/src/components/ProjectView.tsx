@@ -17,7 +17,6 @@ export const ProjectView = ({ courseId, projectId, onNavigate }: ProjectViewProp
   const course = courses.find((c) => c.id === courseId);
   const project = course?.projects.find((p) => p.id === projectId);
   const { user, completeProject } = useAuth();
-  
   const [checkedRequirements, setCheckedRequirements] = useState<boolean[]>(
     project?.requirements.map(() => false) || []
   );
