@@ -4,6 +4,7 @@ interface User {
   id: number;
   name: string;
   email: string;
+  createdAt: string;
   progress: {
     [courseId: string]: {
       completedLessons: number[];
@@ -52,7 +53,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const fetchUser = async (token: string) => {
     try {
       const response = await fetch(`${API_URL}/auth/me.php`, {
-        credentials: 'include', // Important for sending auth headers cross-origin
+        credentials: 'include',
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json',
@@ -62,25 +63,26 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
       if (response.ok) {
         const userData = await response.json();
-        // Combine first and last name and ensure progress has projectsCompleted
 
         const progressData = (userData.progress && typeof userData.progress === 'object' && !Array.isArray(userData.progress))
-    ? userData.progress
-    : {};
+          ? userData.progress
+          : {};
 
         const formattedUser: User = {
           id: userData.id,
           name: `${userData.first_name} ${userData.last_name}`.trim(),
           email: userData.email,
+          createdAt: userData.created_at,
           progress: progressData,
         };
-        // Ensure projectsCompleted exists for each course in progress
+
         for (const courseId in formattedUser.progress) {
           if (!formattedUser.progress[courseId].projectsCompleted) {
             formattedUser.progress[courseId].projectsCompleted = [];
           }
         }
         setUser(formattedUser);
+        console.log("User Info: " + formattedUser);
         return true;
       } else {
         // Token is invalid or expired
@@ -165,16 +167,16 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setUser(updatedUser);
     updateProgressOnBackend(updatedUser.progress);
 
-    
+
   };
 
   const updateProgressOnBackend = async (progress: User['progress']) => {
     const token = localStorage.getItem('lms_token');
     if (!token) return;
-    
-  // has contents - [ html: { completedLessons: [1], projectCompleted : [], quizScores: {} } ]
 
-    console.log(JSON.stringify({progress}));
+    // has contents - [ html: { completedLessons: [1], projectCompleted : [], quizScores: {} } ]
+
+    console.log(JSON.stringify({ progress }));
     try {
       await fetch(`${API_URL}/auth/update.php`, {
         method: 'POST',
@@ -194,7 +196,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const completeProject = (courseId: string, projectId: number) => {
     if (!user) return;
-    
+
     const updatedUser = JSON.parse(JSON.stringify(user));
     if (!updatedUser.progress[courseId]) {
       updatedUser.progress[courseId] = {

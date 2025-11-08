@@ -110,7 +110,9 @@ export const Profile = () => {
                 <Calendar className="w-4 h-4 text-muted-foreground" />
                 <div>
                   <p className="text-muted-foreground">Member Since</p>
-                  <p>October 2025</p>
+                  <p>{new Date(user.createdAt).toLocaleDateString('en-US', {
+                    year: 'numeric', month: 'long'
+                  })}</p>
                 </div>
               </div>
             </div>
@@ -173,19 +175,16 @@ export const Profile = () => {
               return (
                 <div
                   key={achievement.id}
-                  className={`p-4 rounded-lg border ${
-                    achievement.earned
+                  className={`p-4 rounded-lg border ${achievement.earned
                       ? 'border-primary/50 bg-primary/5'
                       : 'border-border bg-muted/30 opacity-50'
-                  }`}
+                    }`}
                 >
                   <div className="flex items-start gap-3">
-                    <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${
-                      achievement.earned ? 'bg-primary' : 'bg-muted'
-                    }`}>
-                      <Icon className={`w-5 h-5 ${
-                        achievement.earned ? 'text-primary-foreground' : 'text-muted-foreground'
-                      }`} />
+                    <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${achievement.earned ? 'bg-primary' : 'bg-muted'
+                      }`}>
+                      <Icon className={`w-5 h-5 ${achievement.earned ? 'text-primary-foreground' : 'text-muted-foreground'
+                        }`} />
                     </div>
                     <div className="flex-1">
                       <div className="flex items-center gap-2">
