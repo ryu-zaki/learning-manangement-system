@@ -36,6 +36,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const API_URL = 'http://localhost/classify';
+  console.log(user);
 
   useEffect(() => {
     const loadUserFromToken = async () => {
@@ -57,21 +58,27 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           'Content-Type': 'application/json',
         },
       });
-console.log(response.ok)
+      console.log(response.ok)
+
       if (response.ok) {
         const userData = await response.json();
         // Combine first and last name and ensure progress has projectsCompleted
+
+        const progressData = (userData.progress && typeof userData.progress === 'object' && !Array.isArray(userData.progress))
+    ? userData.progress
+    : {};
+
         const formattedUser: User = {
           id: userData.id,
           name: `${userData.first_name} ${userData.last_name}`.trim(),
           email: userData.email,
-          progress: userData.progress || {},
+          progress: progressData,
         };
         // Ensure projectsCompleted exists for each course in progress
         for (const courseId in formattedUser.progress) {
-            if (!formattedUser.progress[courseId].projectsCompleted) {
-                formattedUser.progress[courseId].projectsCompleted = [];
-            }
+          if (!formattedUser.progress[courseId].projectsCompleted) {
+            formattedUser.progress[courseId].projectsCompleted = [];
+          }
         }
         setUser(formattedUser);
         return true;
@@ -98,7 +105,7 @@ console.log(response.ok)
       if (response.ok) {
         const { token } = await response.json();
         localStorage.setItem('lms_token', token);
-        return await fetchUser(token); 
+        return await fetchUser(token);
       }
       return false;
     } catch (error) {
@@ -108,7 +115,7 @@ console.log(response.ok)
   };
 
   const signup = async (name: string, email: string, password: string): Promise<boolean> => {
-    
+
     try {
       const response = await fetch(`${API_URL}/auth/register.php`, {
         method: 'POST',
@@ -120,10 +127,10 @@ console.log(response.ok)
         const { token } = await response.json();
         localStorage.setItem('lms_token', token);
         return await fetchUser(token);
-      } 
-       return true;
+      }
+      return true;
 
-      
+
     } catch (error) {
       console.error('Signup failed:', error);
       return false;
@@ -138,7 +145,7 @@ console.log(response.ok)
   const updateProgress = (courseId: string, lessonId: number, quizScore?: number) => {
     if (!user) return;
 
-    const updatedUser = { ...user };
+    const updatedUser = JSON.parse(JSON.stringify(user));
     if (!updatedUser.progress[courseId]) {
       updatedUser.progress[courseId] = {
         completedLessons: [],
@@ -156,13 +163,39 @@ console.log(response.ok)
     }
 
     setUser(updatedUser);
-    // In a real app, you would also send this update to the backend.
+    updateProgressOnBackend(updatedUser.progress);
+
+    
+  };
+
+  const updateProgressOnBackend = async (progress: User['progress']) => {
+    const token = localStorage.getItem('lms_token');
+    if (!token) return;
+    
+  // has contents - [ html: { completedLessons: [1], projectCompleted : [], quizScores: {} } ]
+
+    console.log(JSON.stringify({progress}));
+    try {
+      await fetch(`${API_URL}/auth/update.php`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+        },
+        body: JSON.stringify({ progress }), // generates = " { "newProgress": [] } "
+      });
+      // You might want to add response handling here
+    } catch (error) {
+      console.error('Failed to update progress on backend:', error);
+      // Optionally, handle the error, e.g., by showing a notification
+      // or reverting the local state change.
+    }
   };
 
   const completeProject = (courseId: string, projectId: number) => {
     if (!user) return;
-
-    const updatedUser = { ...user };
+    
+    const updatedUser = JSON.parse(JSON.stringify(user));
     if (!updatedUser.progress[courseId]) {
       updatedUser.progress[courseId] = {
         completedLessons: [],
@@ -176,7 +209,8 @@ console.log(response.ok)
     }
 
     setUser(updatedUser);
-    // In a real app, you would also send this update to the backend.
+    updateProgressOnBackend(updatedUser.progress);
+    console.log(updatedUser.progress);
   };
 
   if (loading) {
