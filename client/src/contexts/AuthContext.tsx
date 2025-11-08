@@ -57,7 +57,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           'Content-Type': 'application/json',
         },
       });
-
+console.log(response.ok)
       if (response.ok) {
         const userData = await response.json();
         // Combine first and last name and ensure progress has projectsCompleted
