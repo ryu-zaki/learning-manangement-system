@@ -17,7 +17,7 @@ export const Login = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
-  
+
     if (isLogin) {
       const success = await login(email, password);
       if (!success) {
@@ -31,6 +31,7 @@ export const Login = () => {
 
 
       const success = await signup(name, email, password);
+      console.log(success);
       if (!success) {
         setError('Email already exists');
       }
